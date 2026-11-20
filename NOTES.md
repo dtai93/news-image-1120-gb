@@ -10,3 +10,6 @@ Wikipedia's 20 November portal was still empty (last edit 19 November). Pages re
 
 Done: stories collected into data/stories.json and checked with tools/check-stories.mjs.
 Next: draw the 1024 image from these stories only. Do not render Thursday's Shenzhen summit, the Rohingya ruling, the GTA launch, or Anthropic's pricing day as Friday news.
+
+Done: rendered the one-page 1024 image from these stories. Masthead is the date, with six figures, three drawn leads, ten numbered cards, a lat/lon pin map, the also-list, and a Thursday date check. entry.png is 1024x1024, 24-bit, about 288 KB.
+Next: nothing further on this page. Do not add stories, and do not treat Thursday's Shenzhen summit, Rohingya ruling, GTA launch, or Anthropic debut as Friday news.

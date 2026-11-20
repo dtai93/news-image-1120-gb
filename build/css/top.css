@@ -1,0 +1,70 @@
+.kicker-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #1a1612;
+  padding-bottom: 1px;
+}
+.kicker, .count {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.count { letter-spacing: 0.06em; }
+.mast h1 {
+  margin: 1px 0 0;
+  font-family: "Playfair Display", "Source Serif Pro", serif;
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 0.9;
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+}
+.tag {
+  margin: 2px 0 0;
+  font-family: Newsreader, "Source Serif Pro", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 1.15;
+}
+.rules {
+  margin-top: 3px;
+  height: 5px;
+  border-top: 2.5px solid #1a1612;
+  border-bottom: 1px solid #1a1612;
+}
+.figures {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid #1a1612;
+}
+.fig { padding: 2px 6px 3px; border-right: 1px solid #ddd4c6; }
+.fig:last-child { border-right: 0; }
+.fig b {
+  display: block;
+  font-family: Fraunces, "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.fig span {
+  display: block;
+  margin-top: 1px;
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-size: 10.5px;
+  line-height: 1.12;
+  color: #3a342c;
+}
+.chips { display: flex; gap: 4px; }
+.chip {
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 15px;
+  padding: 0 6px;
+}
