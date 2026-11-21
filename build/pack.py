@@ -1,4 +1,4 @@
-"""Pack the screenshot into a 1024 PNG of 200–600 KB."""
+"""Pack raw.png into a 24-bit 1024 PNG of 200–900 KB, plus a 300px QA copy."""
 from pathlib import Path
 from PIL import Image
 
@@ -9,14 +9,15 @@ if src.size != (1024, 1024):
 out = root / "entry.png"
 src.save(out, "PNG", optimize=True)
 n = out.stat().st_size
-if n > 600_000:
-    q = src.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-    q.save(out, "PNG", optimize=True)
+if n > 900_000:
+    src.point(lambda p: (p // 2) * 2).save(out, "PNG", optimize=True)
     n = out.stat().st_size
-if n > 600_000:
-    q = src.quantize(colors=240, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE)
-    q.save(out, "PNG", optimize=True)
-    n = out.stat().st_size
-if not (200_000 <= n <= 600_000):
-    raise SystemExit(f"size {n} outside 200–600 KB")
-print("entry.png", n, "bytes")
+if not (200_000 <= n <= 900_000) or n > 1_048_576:
+    raise SystemExit(f"size {n} outside 200–900 KB")
+with out.open("rb") as f:
+    head = f.read(26)
+if head[24] != 8 or head[25] not in (2, 6):
+    raise SystemExit(f"not 24-bit PNG depth {head[24]} type {head[25]}")
+qa = src.resize((300, 300), Image.Resampling.LANCZOS)
+qa.save(root / "build" / "at300.png", "PNG")
+print("entry.png", n, "bytes", "24-bit")

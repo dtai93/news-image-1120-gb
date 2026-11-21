@@ -1,6 +1,6 @@
-const COL = {
-  Europe: "#1d4e89", Americas: "#c2410c", "Asia-Pacific": "#0f766e",
-  "Middle East": "#b42318", Africa: "#a16207", Oceania: "#1f7a4d", World: "#6d28d9"
+const FALL = {
+  Europe: "#1d4e89", Americas: "#c2410c", Asia: "#0f766e",
+  "Middle East": "#b42318", Africa: "#8a5a10", Oceania: "#1f7a4d", Global: "#4c3d73"
 };
 const LAND = [
   "-166,68 -160,66 -153,59 -142,60 -136,56 -130,54 -125,49 -124,40 -122,36 -117,32 -114,28 -110,24 -106,22 -97,16 -90,16 -87,13 -83,9 -80,8 -77,8 -84,13 -90,18 -97,22 -97,26 -94,30 -88,30 -82,29 -81,25 -80,26 -81,31 -76,35 -74,39 -73.2,40.8 -70,42 -67,45 -60,47 -56,53 -64,59 -78,63 -90,66 -105,72 -128,71 -150,71 -166,68",
@@ -28,52 +28,43 @@ function ring(spec, W, H) {
   return "M" + pts.join("L") + "Z";
 }
 
-export function drawMap(stories) {
-  const W = 360, H = 180;
+export function drawMap(stories, col) {
+  const C = col || FALL;
+  const W = 300, H = 168;
   const proj = (lat, lon) => [((+lon + 180) / 360) * W, ((90 - +lat) / 180) * H];
-  let grid = "";
-  for (let lon = -180; lon <= 180; lon += 30) {
-    const x = ((lon + 180) / 360) * W;
-    grid += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#a9c3d4" stroke-width="0.25"/>`;
-  }
-  for (let lat = -60; lat <= 60; lat += 30) {
-    const y = ((90 - lat) / 180) * H;
-    const sw = lat === 0 ? 0.6 : 0.25;
-    grid += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#a9c3d4" stroke-width="${sw}"/>`;
-  }
-  const land = LAND.map(s => `<path d="${ring(s, W, H)}" fill="#e7d7b4" stroke="#b7a27c" stroke-width="0.35"/>`).join("");
-  const pins = stories.filter(s => s.n <= 13).map(s => {
+  const eq = ((90 - 0) / 180) * H;
+  const grid = `<line x1="0" y1="${eq.toFixed(1)}" x2="${W}" y2="${eq.toFixed(1)}" stroke="#a9c6d8" stroke-width="0.7"/>`;
+  const land = LAND.map((s) => `<path d="${ring(s, W, H)}" fill="#e6d2a4" stroke="#8d7349" stroke-width="0.7"/>`).join("");
+  const pins = stories.filter((s) => s.n <= 13).map((s) => {
     const [x, y] = proj(s.lat, s.lon);
-    return { n: s.n, x, y, c: COL[s.region] };
+    return { n: s.n, x, y, ox: x, oy: y, c: C[s.region] };
   });
-  const used = new Set();
-  let marks = "";
-  for (const a of pins) {
-    if (used.has(a.n)) continue;
-    const g = [a];
-    used.add(a.n);
-    for (const b of pins) {
-      if (!used.has(b.n) && Math.hypot(a.x - b.x, a.y - b.y) < 3.5) {
-        g.push(b); used.add(b.n);
+  for (let k = 0; k < 80; k++) {
+    for (let i = 0; i < pins.length; i++) {
+      for (let j = i + 1; j < pins.length; j++) {
+        let dx = pins[j].x - pins[i].x;
+        let dy = pins[j].y - pins[i].y;
+        const d = Math.hypot(dx, dy) || 0.01;
+        if (d < 16) {
+          const push = (16 - d) / 2;
+          dx /= d; dy /= d;
+          pins[i].x -= dx * push; pins[i].y -= dy * push;
+          pins[j].x += dx * push; pins[j].y += dy * push;
+        }
       }
     }
-    const x = g.reduce((s, p) => s + p.x, 0) / g.length;
-    const y = g.reduce((s, p) => s + p.y, 0) / g.length;
-    g.sort((p, q) => p.n - q.n);
-    if (g.length === 1) {
-      const fs = a.n >= 10 ? 5.1 : 6.1;
-      marks += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.4" fill="${a.c}" stroke="#fff" stroke-width="0.7"/>`;
-      marks += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" dy="0.34em" text-anchor="middle" font-size="${fs}" font-family="IBM Plex Sans Condensed,sans-serif" font-weight="700" fill="#fff">${a.n}</text>`;
-    } else {
-      marks += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="#1a1612"/>`;
-      g.forEach((p, i) => {
-        const dx = (i - (g.length - 1) / 2) * 8.2;
-        const fs = p.n >= 10 ? 4.8 : 5.6;
-        marks += `<circle cx="${(x + dx).toFixed(1)}" cy="${(y - 5.2).toFixed(1)}" r="4" fill="${p.c}" stroke="#fff" stroke-width="0.6"/>`;
-        marks += `<text x="${(x + dx).toFixed(1)}" y="${(y - 5.2).toFixed(1)}" dy="0.34em" text-anchor="middle" font-size="${fs}" font-family="IBM Plex Sans Condensed,sans-serif" font-weight="700" fill="#fff">${p.n}</text>`;
-      });
-    }
   }
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-    <rect width="${W}" height="${H}" fill="#c5d9ea"/>${grid}${land}${marks}</svg>`;
+  let marks = "";
+  for (const p of pins) {
+    p.x = Math.max(8, Math.min(W - 8, p.x));
+    p.y = Math.max(8, Math.min(H - 8, p.y));
+    if (Math.hypot(p.x - p.ox, p.y - p.oy) > 3) {
+      marks += `<line x1="${p.ox.toFixed(1)}" y1="${p.oy.toFixed(1)}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#1a1612" stroke-width="0.6"/>`;
+      marks += `<circle cx="${p.ox.toFixed(1)}" cy="${p.oy.toFixed(1)}" r="1.3" fill="#1a1612"/>`;
+    }
+    const fs = p.n >= 10 ? 6.2 : 7;
+    marks += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.6" fill="${p.c}" stroke="#fff" stroke-width="0.8"/>`;
+    marks += `<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" dy="0.35em" text-anchor="middle" font-size="${fs}" font-family="IBM Plex Sans Condensed,sans-serif" font-weight="700" fill="#fff">${p.n}</text>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="${W}" height="${H}" fill="#c5dbed"/>${grid}${land}${marks}</svg>`;
 }

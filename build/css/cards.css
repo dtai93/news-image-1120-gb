@@ -1,52 +1,57 @@
 .leads {
+  flex: 0 0 248px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  height: 186px;
+  gap: 5px;
+  min-height: 0;
 }
 .lead {
-  border: 1px solid #1a1612;
-  background: #f7f4ec;
   min-width: 0;
   display: flex;
   flex-direction: column;
+  border: 1px solid #16130f;
+  background: #fbf8f2;
 }
-.lead .art { height: 98px; flex: 0 0 98px; background: #d7e3ee; }
+.lead .art { height: 146px; flex: 0 0 146px; }
 .lead .pad { padding: 3px 7px 4px; min-width: 0; }
 .lead h2 {
   margin: 0;
   font-family: Newsreader, "Source Serif Pro", serif;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.08;
   letter-spacing: -0.015em;
 }
-.lead .dek { font-size: 11px; line-height: 1.2; }
-.lead .src { font-size: 10.5px; }
+.lead .dek { font-size: 11.5px; line-height: 1.22; }
+.lead .src { margin: 1px 0 0; font-size: 11px; line-height: 1.15; }
 .cards {
+  flex: 0 0 300px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 120px 120px;
-  gap: 5px;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  min-height: 0;
 }
 .card {
   min-width: 0;
-  background: #fbf8f2;
-  border: 1px solid #cfc6b8;
-  border-top: 3px solid var(--c, #1a1612);
   display: flex;
   flex-direction: column;
+  background: #fbf8f2;
+  border: 1px solid #cfc6b6;
+  border-top: 3px solid var(--c, #16130f);
 }
-.card .art { height: 36px; flex: 0 0 36px; background: #efe8da; }
+.card .art { height: 70px; flex: 0 0 70px; }
+.card .row { display: flex; align-items: center; justify-content: space-between; gap: 3px; }
+.card .row .st { position: static; flex: 0 0 auto; font-size: 8px; letter-spacing: 0.02em; padding: 0 3px; }
 .card .pad { padding: 2px 5px 3px; min-width: 0; }
+.card .meta { font-size: 9px; letter-spacing: 0.01em; }
 .card h3 {
   margin: 0;
   font-family: Newsreader, "Source Serif Pro", serif;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.12;
   letter-spacing: -0.012em;
 }
-.card .dek { font-size: 9.5px; line-height: 1.18; }
-.card .src { font-size: 9px; line-height: 1.1; }
-.card .meta { font-size: 9px; letter-spacing: 0.03em; }
+.card .dek { font-size: 10px; line-height: 1.2; }
+.card .dek i { font-size: 10px; }

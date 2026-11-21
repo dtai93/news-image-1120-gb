@@ -1,5 +1,5 @@
-// Friday 20 November 2026, one page: masthead date, six figures, three drawn leads,
-// ten numbered cards, a lat/lon pin map, an also-list and a Thursday date check.
+// V2 front page: huge Friday date, UTC timeline, six figures, status chips,
+// three drawn leads, ten cards, a compact pin map and the also-list.
 // Copies entry.png to MAKEFUN_OUTPUT_DIR (or /output) after checking the PNG header.
 
 import { copyFileSync, readFileSync } from 'node:fs';

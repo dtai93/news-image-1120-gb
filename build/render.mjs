@@ -5,7 +5,7 @@ import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const port = 18841;
+const port = 18851;
 const mime = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -38,7 +38,7 @@ server.listen(port, "127.0.0.1", () => {
   const shot = spawn("node", [
     "/home/box/makefun/tools/shot.mjs",
     `http://127.0.0.1:${port}/build/page.html`,
-    out, "1024", "1024", "18842"
+    out, "1024", "1024", "18852"
   ], { stdio: "inherit", env: { ...process.env, SHOT_WAIT_MS: "2800" } });
   shot.on("exit", (code) => {
     server.close();
